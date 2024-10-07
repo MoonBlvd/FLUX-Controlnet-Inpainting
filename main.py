@@ -6,26 +6,30 @@ from pipeline_flux_controlnet_inpaint import FluxControlNetInpaintingPipeline
 
 check_min_version("0.30.2")
 
-# Set image path , mask path and prompt
-image_path='https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket.png',
-mask_path='https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket_mask.jpeg',
-image_path='images_bucket.png'#'https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket.png',
-mask_path='images_bucket_mask.jpeg' #'https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket_mask.jpeg',
-prompt='a person wearing a white shoe, carrying a white bucket with text "FLUX" on it'
+# # Set image path , mask path and prompt
+# image_path='https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket.png',
+# mask_path='https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket_mask.jpeg',
+# image_path='images_bucket.png'#'https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket.png',
+# mask_path='images_bucket_mask.jpeg' #'https://huggingface.co/alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha/resolve/main/images/bucket_mask.jpeg',
+# prompt='a person wearing a white shoe, carrying a white bucket with text "FLUX" on it'
+
+image_path='00055_00.jpg'
+mask_path='00055_00_mask.png'
+prompt="A fashion model wearing a black and blue body-suite, the suite has word 'Batman' on it in the chest position. "
 
 # Build pipeline
 controlnet = FluxControlNetModel.from_pretrained("alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha", torch_dtype=torch.bfloat16)
 transformer = FluxTransformer2DModel.from_pretrained(
         "black-forest-labs/FLUX.1-dev", subfolder='transformer', torch_dytpe=torch.bfloat16
-    )
+    ).to(torch.bfloat16)
 pipe = FluxControlNetInpaintingPipeline.from_pretrained(
     "black-forest-labs/FLUX.1-dev",
     controlnet=controlnet,
     transformer=transformer,
     torch_dtype=torch.bfloat16
 ).to("cuda")
-pipe.transformer.to(torch.bfloat16)
-pipe.controlnet.to(torch.bfloat16)
+# pipe.transformer
+# pipe.controlnet.to(torch.bfloat16)
 
 # Load image and mask
 size = (768, 768)
